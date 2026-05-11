@@ -32,6 +32,7 @@ import io.github.guacsec.trustifyda.license.LicenseCheck;
 import io.github.guacsec.trustifyda.logging.LoggersFactory;
 import io.github.guacsec.trustifyda.providers.JavaMavenProvider;
 import io.github.guacsec.trustifyda.providers.golang.model.GoWorkspace;
+import io.github.guacsec.trustifyda.providers.gradle.workspace.GradleWorkspaceDiscovery;
 import io.github.guacsec.trustifyda.providers.javascript.workspace.JsWorkspaceDiscovery;
 import io.github.guacsec.trustifyda.providers.rust.model.CargoMetadata;
 import io.github.guacsec.trustifyda.tools.Ecosystem;
@@ -852,7 +853,13 @@ public final class ExhortApi implements Api {
 
   private static final Set<String> DEFAULT_WORKSPACE_DISCOVERY_IGNORE =
       Set.of(
-          "**/node_modules/**", "**/.git/**", "**/target/**", "**/__pycache__/**", "**/.venv/**");
+          "**/node_modules/**",
+          "**/.git/**",
+          "**/target/**",
+          "**/__pycache__/**",
+          "**/.venv/**",
+          "**/build/**",
+          "**/.gradle/**");
 
   /** Merges default ignore patterns, env var overrides, and caller-provided patterns. */
   Set<String> resolveIgnorePatterns(Set<String> callerPatterns) {
@@ -910,6 +917,14 @@ public final class ExhortApi implements Api {
       if (!uvManifests.isEmpty()) {
         return uvManifests;
       }
+    }
+
+    // Gradle multi-project: settings.gradle or settings.gradle.kts
+    boolean hasGradleSettings =
+        Files.isRegularFile(workspaceDir.resolve("settings.gradle"))
+            || Files.isRegularFile(workspaceDir.resolve("settings.gradle.kts"));
+    if (hasGradleSettings) {
+      return GradleWorkspaceDiscovery.discoverSubprojects(workspaceDir, ignorePatterns);
     }
 
     // JS workspace: require package.json + a lock file
