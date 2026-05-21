@@ -193,6 +193,21 @@ public final class PythonUvProvider extends PythonProvider {
       // Package line: name==version [; env-marker]
       if (!line.startsWith(" ") && !trimmed.startsWith("#")) {
         inViaBlock = false;
+
+        // PEP 440 direct references (name @ url) — skip, no pinned version available
+        if (trimmed.contains(" @ ")) {
+          log.fine("Skipping PEP 440 direct reference: " + trimmed);
+          currentKey = null;
+          continue;
+        }
+
+        // Path dependencies (./local, ../local, /absolute) — skip, no pinned version available
+        if (trimmed.startsWith("./") || trimmed.startsWith("../") || trimmed.startsWith("/")) {
+          log.fine("Skipping path dependency: " + trimmed);
+          currentKey = null;
+          continue;
+        }
+
         if (!trimmed.contains("==")) {
           throw new IOException("uv export: package '" + trimmed + "' has no pinned version");
         }
