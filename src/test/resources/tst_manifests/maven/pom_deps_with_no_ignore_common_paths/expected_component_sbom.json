@@ -24,14 +24,6 @@
     },
     {
       "type" : "library",
-      "bom-ref" : "pkg:maven/org.springframework.boot/spring-boot-starter-test@2.3.5.RELEASE",
-      "group" : "org.springframework.boot",
-      "name" : "spring-boot-starter-test",
-      "version" : "2.3.5.RELEASE",
-      "purl" : "pkg:maven/org.springframework.boot/spring-boot-starter-test@2.3.5.RELEASE"
-    },
-    {
-      "type" : "library",
       "bom-ref" : "pkg:maven/org.springframework.boot/spring-boot-starter-web@2.3.5.RELEASE",
       "group" : "org.springframework.boot",
       "name" : "spring-boot-starter-web",
@@ -76,7 +68,6 @@
       "ref" : "pkg:maven/org.springframework.boot/spring-boot-starter-parent@2.3.5.RELEASE",
       "dependsOn" : [
         "pkg:maven/org.springframework.boot/spring-boot-starter@2.3.5.RELEASE",
-        "pkg:maven/org.springframework.boot/spring-boot-starter-test@2.3.5.RELEASE",
         "pkg:maven/org.springframework.boot/spring-boot-starter-web@2.3.5.RELEASE",
         "pkg:maven/io.quarkus/quarkus-resteasy@2.7.7.Final",
         "pkg:maven/org.keycloak/keycloak-saml-core@1.8.1.Final",
@@ -86,10 +77,6 @@
     },
     {
       "ref" : "pkg:maven/org.springframework.boot/spring-boot-starter@2.3.5.RELEASE",
-      "dependsOn" : [ ]
-    },
-    {
-      "ref" : "pkg:maven/org.springframework.boot/spring-boot-starter-test@2.3.5.RELEASE",
       "dependsOn" : [ ]
     },
     {
