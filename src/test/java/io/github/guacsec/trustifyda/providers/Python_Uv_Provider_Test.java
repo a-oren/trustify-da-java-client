@@ -171,6 +171,24 @@ class Python_Uv_Provider_Test extends ExhortTest {
     assertThat(provider.getRootComponentVersion()).isEqualTo("0.1.0");
   }
 
+  /** Verifies that an inline-table PEP 621 license is read by the uv provider. */
+  @Test
+  void test_readLicenseFromManifest_reads_inline_table_license(@TempDir Path tempDir)
+      throws IOException {
+    // Given
+    Path pyprojectPath = tempDir.resolve("pyproject.toml");
+    Files.writeString(
+        pyprojectPath,
+        "[project]\nname = \"test-project\"\nversion = \"0.1.0\"\n"
+            + "license = { text = \"MIT\" }\n");
+
+    // When
+    var provider = new PythonUvProvider(pyprojectPath);
+
+    // Then
+    assertThat(provider.readLicenseFromManifest()).isEqualTo("MIT");
+  }
+
   @Test
   void test_provideStack_with_uv_export() throws IOException {
     Path pyprojectPath = Path.of(UV_FIXTURE, "pyproject.toml");
