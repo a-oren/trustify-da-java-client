@@ -87,8 +87,8 @@ public final class PyprojectTomlUtils {
   }
 
   /**
-   * Reads the license from a parsed pyproject.toml. Checks {@code project.license} first, then
-   * {@code project.license.text} (PEP 639).
+   * Reads a PEP 639 SPDX string or the legacy PEP 621 {@code project.license.text} value from a
+   * parsed pyproject.toml.
    *
    * @return the license string, or {@code null} if not found
    */
