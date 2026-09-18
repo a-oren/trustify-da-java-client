@@ -80,6 +80,8 @@ updates:
       - "/src/test/resources/tst_manifests/maven/deps_with_ignore_on_artifact"
       - "/src/test/resources/tst_manifests/maven/deps_with_ignore_on_dependency"
       - "/src/test/resources/tst_manifests/maven/deps_with_ignore_on_group"
+      - "/src/test/resources/tst_manifests/maven/deps_with_ignore_on_inherited_version"
+      - "/src/test/resources/tst_manifests/maven/deps_with_ignore_on_property_version"
       - "/src/test/resources/tst_manifests/maven/deps_with_ignore_on_version"
       - "/src/test/resources/tst_manifests/maven/deps_with_ignore_on_wrong"
       - "/src/test/resources/tst_manifests/maven/deps_with_no_ignore"

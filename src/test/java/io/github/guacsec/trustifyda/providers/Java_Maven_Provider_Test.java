@@ -58,7 +58,9 @@ public class Java_Maven_Provider_Test extends ExhortTest {
         "deps_with_ignore_on_wrong",
         "deps_with_no_ignore",
         "pom_deps_with_no_ignore_common_paths",
-        "deps_with_version_range");
+        "deps_with_version_range",
+        "deps_with_ignore_on_property_version",
+        "deps_with_ignore_on_inherited_version");
   }
 
   @ParameterizedTest
