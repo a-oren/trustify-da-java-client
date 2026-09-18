@@ -25,6 +25,7 @@ import java.util.Set;
 import org.tomlj.Toml;
 import org.tomlj.TomlArray;
 import org.tomlj.TomlParseResult;
+import org.tomlj.TomlTable;
 
 /**
  * Shared utilities for Python providers that use {@code pyproject.toml} manifests. Provides TOML
@@ -86,18 +87,23 @@ public final class PyprojectTomlUtils {
   }
 
   /**
-   * Reads the license from a parsed pyproject.toml. Checks {@code project.license} first, then
-   * {@code project.license.text} (PEP 639).
+   * Reads a PEP 639 SPDX string or the legacy PEP 621 {@code project.license.text} value from a
+   * parsed pyproject.toml.
    *
    * @return the license string, or {@code null} if not found
    */
   public static String getLicense(TomlParseResult toml) {
-    String license = toml.getString("project.license");
-    if (license != null && !license.isBlank()) {
+    Object licenseValue = toml.get("project.license");
+    if (licenseValue instanceof String license && !license.isBlank()) {
       return license;
     }
-    String licenseText = toml.getString("project.license.text");
-    return (licenseText != null && !licenseText.isBlank()) ? licenseText : null;
+    if (licenseValue instanceof TomlTable) {
+      String licenseText = toml.getString("project.license.text");
+      if (licenseText != null && !licenseText.isBlank()) {
+        return licenseText;
+      }
+    }
+    return null;
   }
 
   /** Returns {@code true} if the manifest contains {@code [tool.poetry.dependencies]}. */
