@@ -222,10 +222,14 @@ public final class JavaMavenProvider extends BaseJavaProvider {
     // if we have dependencies marked as ignored grab ignored dependencies from the original pom
     // the effective-pom goal doesn't carry comments
     List<DependencyAggregator> dependencies = getDependencies(manifestPath);
+    // Match ignored deps by coordinates without version, mirroring provideStack. The raw pom may
+    // omit the version or carry an unresolved property/range while the effective pom carries the
+    // resolved version, so a version-bearing comparison would never match.
     var ignored =
         dependencies.stream()
             .filter(d -> d.ignored)
-            .map(DependencyAggregator::toPurl)
+            .map(DependencyAggregator::toPurlWithoutVersion)
+            .map(PackageURL::getCoordinates)
             .collect(Collectors.toSet());
     var deps = getDependencies(tmpEffPom);
     deps = resolveVersionRanges(deps);
@@ -235,8 +239,8 @@ public final class JavaMavenProvider extends BaseJavaProvider {
         // mirroring the JS client. Parent/BOM-managed test deps have no version in the source
         // pom, so the version-sensitive equals() match against the original pom would miss them.
         .filter(dep -> !dep.isTestDependency())
+        .filter(dep -> !ignored.contains(dep.toPurlWithoutVersion().getCoordinates()))
         .map(DependencyAggregator::toPurl)
-        .filter(dep -> ignored.stream().noneMatch(artifact -> artifact.isCoordinatesEquals(dep)))
         .forEach(d -> sbom.addDependency(sbom.getRoot(), d, null));
 
     // build and return content for constructing request to the backend

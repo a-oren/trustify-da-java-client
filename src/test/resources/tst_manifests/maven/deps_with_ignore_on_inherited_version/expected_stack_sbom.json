@@ -1,0 +1,38 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2025-04-09T12:14:35Z",
+    "component": {
+      "type": "application",
+      "bom-ref": "pkg:maven/pom-with-inherited-version/pom-with-ignored-lombok@0.0.1",
+      "group": "pom-with-inherited-version",
+      "name": "pom-with-ignored-lombok",
+      "version": "0.0.1",
+      "purl": "pkg:maven/pom-with-inherited-version/pom-with-ignored-lombok@0.0.1"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "pkg:maven/org.slf4j/slf4j-api@1.7.36",
+      "group": "org.slf4j",
+      "name": "slf4j-api",
+      "version": "1.7.36",
+      "purl": "pkg:maven/org.slf4j/slf4j-api@1.7.36"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:maven/pom-with-inherited-version/pom-with-ignored-lombok@0.0.1",
+      "dependsOn": [
+        "pkg:maven/org.slf4j/slf4j-api@1.7.36"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.slf4j/slf4j-api@1.7.36",
+      "dependsOn": []
+    }
+  ]
+}
