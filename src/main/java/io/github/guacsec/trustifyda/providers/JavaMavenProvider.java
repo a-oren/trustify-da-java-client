@@ -227,15 +227,14 @@ public final class JavaMavenProvider extends BaseJavaProvider {
             .filter(d -> d.ignored)
             .map(DependencyAggregator::toPurl)
             .collect(Collectors.toSet());
-    var testsDeps =
-        dependencies.stream()
-            .filter(DependencyAggregator::isTestDependency)
-            .collect(Collectors.toSet());
     var deps = getDependencies(tmpEffPom);
     deps = resolveVersionRanges(deps);
     var sbom = SbomFactory.newInstance().addRoot(getRoot(tmpEffPom), readLicenseFromManifest());
     deps.stream()
-        .filter(dep -> !testsDeps.contains(dep))
+        // exclude test-scoped deps by their own effective-pom scope (version-independent),
+        // mirroring the JS client. Parent/BOM-managed test deps have no version in the source
+        // pom, so the version-sensitive equals() match against the original pom would miss them.
+        .filter(dep -> !dep.isTestDependency())
         .map(DependencyAggregator::toPurl)
         .filter(dep -> ignored.stream().noneMatch(artifact -> artifact.isCoordinatesEquals(dep)))
         .forEach(d -> sbom.addDependency(sbom.getRoot(), d, null));
